@@ -4,6 +4,7 @@
   <div class="p-d-flex p-jc-center p-ai-center">
     <CardCustom title="PrimeVue Card Example" style="width: 300px">
       <template #content>
+        <ClockCustom/>        
         <p>{{ walkStatus }}</p>
         <ButtonCustom @click="changePennyWalkStatus" label="Walker Counter" icon="pi pi-plus"/>
       </template>
