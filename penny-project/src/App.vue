@@ -1,6 +1,6 @@
 
 <template>
-  <body>
+  <body id="main-card">
   <div class="p-d-flex p-jc-center p-ai-center">
     <CardCustom title="PrimeVue Card Example" style="width: 300px">
       <template #content>
@@ -12,7 +12,7 @@
     <CardCustom title="PrimeVue Card Example" style="width: 300px">
       <template #content>
         <p>Has Penny had Breakfast?</p>
-        <SelectButtonCustom v-model="breakfastValue" :options="breakfastOptions" aria-labelledby="basic" />
+        <SelectButtonCustom @click="trackBreakfast" v-model="breakfastValue" :options="breakfastOptions" aria-labelledby="basic" />
       </template>
     </CardCustom>
     <CardCustom title="PrimeVue Card Example" style="width: 300px">
@@ -26,14 +26,11 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   setup() {
-    const handleButtonClick = () => {
-      console.log('Button clicked!');
-    };
-    return {
-      handleButtonClick,
-    };
+    
   },
   data(){
     return {
@@ -45,7 +42,25 @@ export default {
       dinnerOptions: ['No', 'Yes'],
     };
   },
+  created(){
+    this.loadBreakfastButtonState();
+  },
   methods: {
+    async trackBreakfast() {
+      try {
+        await axios.post('/api/track/breakfast/update', { button: 'yes' });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+    async loadBreakfastButtonState(){
+      try {
+        const response = await axios.get('/api/get_button_state/breakfast');
+        this.buttonState = response.data.button_state;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
     changePennyWalkStatus() {
       this.walkCounter += 1;
       this.walkStatus = `Penny has been walked ${this.walkCounter} time${this.walkCounter === 1 ? '.' : 's.'}`;
@@ -57,8 +72,8 @@ export default {
 <style scoped>
 body{
   background-image: url('./assets/PennyPicture.jpeg');
-  background: cover;
   background-size: cover;
   background-repeat: no-repeat;
+  height: 50rem;
 }
 </style>

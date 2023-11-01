@@ -2,8 +2,9 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 
+
 // Import PrimeVue components and styles
-import './assets/css/style.css';
+import './assets/style.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import 'primevue/resources/themes/saga-blue/theme.css';
