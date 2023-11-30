@@ -4,7 +4,7 @@
   <div class="p-d-flex p-jc-center p-ai-center">
     <CardCustom title="PrimeVue Card Example" style="width: 300px">
       <template #content>
-        <ClockCustom/>        
+        <ClockCustom/>     
         <p>{{ walkStatus }}</p>
         <ButtonCustom @click="changePennyWalkStatus" label="Walker Counter" icon="pi pi-plus"/>
       </template>
@@ -40,12 +40,20 @@ export default {
       dinnerValue: 'No',
       breakfastOptions: ['No', 'Yes'],
       dinnerOptions: ['No', 'Yes'],
+      msg : "",
     };
   },
-  created(){
-    this.loadBreakfastButtonState();
-  },
   methods: {
+    getWalkCounter(){
+      const path = 'http://localhost:5000/getWalkCounter'
+      axios.get(path)
+      .then((res) => {
+        this.walkCounter = res.data.walkCounter
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+    },
     async trackBreakfast() {
       try {
         await axios.post('/api/track/breakfast/update', { button: 'yes' });
@@ -62,9 +70,14 @@ export default {
       }
     },
     changePennyWalkStatus() {
+      this.walkCounter == this.getWalkCounter
       this.walkCounter += 1;
       this.walkStatus = `Penny has been walked ${this.walkCounter} time${this.walkCounter === 1 ? '.' : 's.'}`;
     },
+  },
+  created(){
+    this.getWalkCounter();
+    this.loadBreakfastButtonState();
   },
 };
 </script>

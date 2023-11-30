@@ -1,12 +1,34 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, render_template
 from flask_cors import CORS
 
+from dotenv import load_dotenv
+
+load_dotenv('./.flaskenv')
+
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with a strong, random secret key.
-CORS(app)
 
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:8080"}})
+app.config.from_object(__name__)
 
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Title route
+@app.route('/title', methods=['GET'])
+def title():
+    return("Penny Project Backend")
+
+walkCounter = 0
+
+# Get walk count route 
+@app.route('/getWalkCounter', methods=['GET', 'POST'])
+def get_walk_count():
+    response_object = {'status':'success'}
+    if request.method == "POST":
+        post_data = request.get_json()
+        walkCounter += 1
+        response_object['message'] = 'Penny was walked'
+    else:
+        response_object['walkCounter'] = walkCounter
+    return jsonify(response_object)
 
 @app.route('/api/track/breakfast/update', methods=['POST'])
 def track_breakfast():
@@ -15,7 +37,7 @@ def track_breakfast():
     session['button_state'] = button
     return jsonify({"message": "Button state updated successfully."})
 
-@app.route('/api/get_button_state/breakfast')
+@app.route('/api/get_button_state/breakfast', methods=['GET'])
 def get_button_state():
     button_state = session.get('button_state', '')  # Retrieve the button state from the session.
     return jsonify({"button_state": button_state})
@@ -27,5 +49,5 @@ def log_request_info():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
 
