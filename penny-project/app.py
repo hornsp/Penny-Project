@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify, session, render_template
 from flask_cors import CORS
+import secrets
 
-from dotenv import load_dotenv
+secret_key = secrets.token_hex(16)
 
-load_dotenv('./.flaskenv')
+app.secret_key = secret_key
 
 app = Flask(__name__)
 
@@ -21,6 +22,7 @@ walkCounter = 0
 # Get walk count route 
 @app.route('/getWalkCounter', methods=['GET', 'POST'])
 def get_walk_count():
+    global walkCounter
     response_object = {'status':'success'}
     if request.method == "POST":
         post_data = request.get_json()

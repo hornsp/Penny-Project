@@ -15,10 +15,10 @@ p {
     text-align: left;
     position: absolute;
     left: 28rem;
-    top: 5rem;
+    top: 22rem;
     transform: translate(-50%, -50%);
     color: black;
-    background-color: white;
+    background-color: clear;
 }
 .time{
     letter-spacing: 0.05em;

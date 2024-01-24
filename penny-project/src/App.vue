@@ -1,4 +1,3 @@
-
 <template>
   <body id="main-card">
   <div class="p-d-flex p-jc-center p-ai-center">
@@ -45,7 +44,7 @@ export default {
   },
   methods: {
     getWalkCounter(){
-      const path = 'http://localhost:5000/getWalkCounter'
+      const path = 'http://localhost:3000/getWalkCounter'
       axios.get(path)
       .then((res) => {
         this.walkCounter = res.data.walkCounter
@@ -56,14 +55,14 @@ export default {
     },
     async trackBreakfast() {
       try {
-        await axios.post('/api/track/breakfast/update', { button: 'yes' });
+        await axios.post('http://localhost:3000/api/track/breakfast/update', { button: 'yes' });
       } catch (error) {
         console.error('Error:', error);
       }
     },
     async loadBreakfastButtonState(){
       try {
-        const response = await axios.get('/api/get_button_state/breakfast');
+        const response = await axios.get('http://localhost:3000/api/get_button_state/breakfast');
         this.buttonState = response.data.button_state;
       } catch (error) {
         console.error('Error:', error);
@@ -87,6 +86,6 @@ body{
   background-image: url('./assets/PennyPicture.jpeg');
   background-size: cover;
   background-repeat: no-repeat;
-  height: 50rem;
+  height: 75vmin;
 }
 </style>
