@@ -69,14 +69,62 @@ export default {
       }
     },
     changePennyWalkStatus() {
-      this.walkCounter == this.getWalkCounter
+      this.getWalkCounter();
       this.walkCounter += 1;
       this.walkStatus = `Penny has been walked ${this.walkCounter} time${this.walkCounter === 1 ? '.' : 's.'}`;
+    },
+    loadPersistedState() {
+      this.walkCounter = parseInt(localStorage.getItem('walkCounter')) || 0;
+      this.breakfastValue = localStorage.getItem('breakfastValue') || 'No';
+      this.dinnerValue = localStorage.getItem('dinnerValue') || 'No';
+    },
+    resetValues() {
+      this.walkCounter = 0;
+      this.walkStatus = 'Has Penny been walked today?';
+      this.breakfastValue = 'No';
+      this.dinnerValue = 'No';
+
+      localStorage.setItem('walkCounter', this.walkCounter);
+      localStorage.setItem('breakfastValue', this.breakfastValue);
+      localStorage.setItem('dinnerValue', this.dinnerValue);
+
+      console.log('Values reset at 3 am EST');
+    },
+    refreshAtSpecificTime(hour , minute) {
+      console.log('Refreshing at', hour, ':', minute);
+      const now = new Date();
+      const refreshTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0);
+      refreshTime.setHours(refreshTime.getHours() - 5);
+
+      let timeUntilRefresh = refreshTime - now;
+      if (timeUntilRefresh < 0) {
+        timeUntilRefresh += 24 * 60 * 60 * 1000; 
+      }
+
+      setTimeout(() => {
+        this.resetValues();
+        this.getWalkCounter();
+        this.loadBreakfastButtonState();
+        this.refreshAtSpecificTime(hour, minute); 
+      }, timeUntilRefresh);
     },
   },
   created(){
     this.getWalkCounter();
     this.loadBreakfastButtonState();
+    this.loadPersistedState(); 
+    this.refreshAtSpecificTime(3, 0);
+    },
+  watch: {
+    walkCounter(newVal) {
+      localStorage.setItem('walkCounter', newVal);
+    },
+    breakfastValue(newVal) {
+      localStorage.setItem('breakfastValue', newVal);
+    },
+    dinnerValue(newVal) {
+      localStorage.setItem('dinnerValue', newVal);
+    },
   },
 };
 </script>

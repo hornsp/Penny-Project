@@ -4,7 +4,6 @@ import secrets
 
 secret_key = secrets.token_hex(16)
 
-app.secret_key = secret_key
 
 app = Flask(__name__)
 
